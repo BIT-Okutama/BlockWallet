@@ -3,10 +3,12 @@ import * as firebase from 'firebase';
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "<your-api-key>",
-  authDomain: "<your-auth-domain>",
-  databaseURL: "<your-database-url>",
-  storageBucket: "<your-storage-bucket>",
+  apiKey: "AIzaSyCmpkl9VTORJMG-IFFkNDwRF4qjSQn3BzM",
+  authDomain: "blockwallet-c410f.firebaseapp.com",
+  databaseURL: "https://blockwallet-c410f.firebaseio.com",
+  projectId: "blockwallet-c410f",
+  storageBucket: "blockwallet-c410f.appspot.com",
+  messagingSenderId: "733399648006"
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
