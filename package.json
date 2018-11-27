@@ -9,8 +9,10 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "bitcoinjs-lib": "^4.0.2",
     "expo": "^31.0.2",
     "firebase": "^5.5.9",
+    "frisbee": "^2.0.5",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
     "react-native-camera": "1.2.0",
