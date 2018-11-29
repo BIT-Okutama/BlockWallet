@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import { Button, View, Text, StyleSheet } from 'react-native';
+import uuid from 'react-native-uuid';
 
 class HomeScreen extends Component {
+
+  componentDidMount() {
+    this.setState({
+      isLoading: false,
+    });
+  }
+
   static navigationOptions = ({ navigate, navigation }) => ({
     title: "BlockWallet",
     headerRight: (

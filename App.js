@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import * as firebase from 'firebase';
+import uuid from 'react-native-uuid';
 import HomeScreen from './components/HomeScreen';
 import WalletCreationScreen from './components/WalletCreationScreen';
 import ImportWalletScreen from './components/ImportWalletScreen';
@@ -39,7 +40,21 @@ const RootStack = createStackNavigator(
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 export default class App extends React.Component {
+
+  componentDidMount() {
+    this.setState({
+      uuid: uuid.v1(),
+    });
+  }
+
+  constructor(props){
+    super(props);
+    this.state ={ isLoading: true, udid: "" }
+  }
+
   render() {
-    return <RootStack />;
+    return (
+      <RootStack />
+    );
   }
 }
