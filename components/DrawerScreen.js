@@ -8,8 +8,12 @@ class WalletCreationScreen extends Component {
     };
     render() {
         return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            
+        <View style={{ flex: 1 }}>
+            <Button
+            title="Groups"
+            backgroundColor="#2E4053"
+            onPress={() => this.props.navigation.navigate('Group')}
+          />
         </View>
         );
   }
