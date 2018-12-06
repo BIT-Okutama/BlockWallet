@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Button, View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import uuid from 'react-native-uuid';
 import Frisbee from 'frisbee';
+import * as firebase from 'firebase';
 
 class HomeScreen extends Component {
   static navigationOptions = ({ navigate, navigation }) => ({
@@ -26,17 +27,28 @@ class HomeScreen extends Component {
 
   constructor(props){
     super(props);
-    this.state ={ isLoading: true, balance: 0}
+    this.state ={ 
+      isLoading: true, 
+      balance: 0, 
+      mobileNumber: this.props.navigation.getParam('mobileNumber', '') 
+    }
   }
 
   componentWillMount() {
-    this.fetchBalance()
+    this.fetchAddress();
   }
 
-  async fetchBalance() {
+  async fetchAddress() {
+    firebase.database().ref('wallet/' + this.state.mobileNumber).on('value', snapshot => {
+      this.fetchBalance(snapshot.val().address);
+    })
+  }
+
+  async fetchBalance(address) {
+    console.log('wallet address fetched: ' + address);
     try {
       const api = new Frisbee({ baseURI: 'https://api.blockcypher.com/v1/btc/test3/' });
-      let response = await api.get('addrs/n3Hkmqs2Nu3oQykqYmesJics7RrQiEFENe/balance');
+      let response = await api.get('addrs/'+ address +'/balance');
       let json = response.body;
       if (typeof json === 'undefined' || typeof json.final_balance === 'undefined') {
         alert("Fetching Wallet Balance Failed");
@@ -56,31 +68,33 @@ class HomeScreen extends Component {
   
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        <View>
-          <Text style={[styles.titleThinText]}>
-              btc {" "}
-              <Text style={[styles.titleLargeBoldText, styles.greyColor, {paddingLeft: 50}]}> 
-                  {this.state.balance}
-              </Text>
+      <ScrollView>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <View>
+            <Text style={[styles.titleThinText]}>
+                btc {" "}
+                <Text style={[styles.titleLargeBoldText, styles.greyColor, {paddingLeft: 50}]}> 
+                    {this.state.balance}
+                </Text>
+            </Text>
+          </View>
+          <Text style={styles.titleSmallThinText}>
+            Wallet Balance
           </Text>
+          <View style={{ flex: 2, flexDirection: 'row', marginTop:30 }}>
+            <Button
+              title="Send"
+              backgroundColor="#2E4053"
+              onPress={() => this.props.navigation.push('Send')}
+            />
+            <Button
+              title="Receive"
+              backgroundColor="#2E4053"
+              onPress={() => this.props.navigation.navigate('Home')}
+            />
+          </View>
         </View>
-        <Text style={styles.titleSmallThinText}>
-          Wallet Balance
-        </Text>
-        <View style={{ flex: 1, flexDirection: 'row', marginTop:30 }}>
-          <Button
-            title="Send"
-            backgroundColor="#2E4053"
-            onPress={() => this.props.navigation.navigate('Send')}
-          />
-          <Button
-            title="Receive"
-            backgroundColor="#2E4053"
-            onPress={() => this.props.navigation.navigate('Home')}
-          />
-        </View>
-      </View>
+      </ScrollView>
     );
   }
 }

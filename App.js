@@ -10,6 +10,8 @@ import SendScreen from './components/SendScreen';
 import ScannerScreen from './components/ScannerScreen';
 import GroupScreen from './components/GroupsScreen';
 import CreateGroupScreen from './components/CreateGroupScreen';
+import GroupDashboardScreen from './components/GroupDashboardScreen';
+import AddMembersScreen from './components/AddMembersScreen';
 import * as firebase from 'firebase';
 
 // Initialize Firebase
@@ -25,6 +27,12 @@ firebase.initializeApp(config);
 
 const RootStack = createStackNavigator(
   {
+    Login: {
+      screen: LoginScreen,
+      navigationOptions: ({navigation}) => ({
+        header: null
+      })
+    }, 
     Home: HomeScreen,
     Wallet: WalletCreationScreen,
     Import: ImportWalletScreen,
@@ -33,12 +41,8 @@ const RootStack = createStackNavigator(
     Scan: ScannerScreen,
     Group: GroupScreen,
     CreateGroup: CreateGroupScreen,
-    Login: {
-      screen: LoginScreen,
-      navigationOptions: ({navigation}) => ({
-        header: null
-      })
-    }, 
+    GroupDashboard: GroupDashboardScreen,
+    AddMember: AddMembersScreen,
   },
   {
     initialRouteName: 'Login',

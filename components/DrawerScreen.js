@@ -3,7 +3,7 @@ import { Button, View, TextInput } from 'react-native';
 
 class WalletCreationScreen extends Component {
     static navigationOptions = {
-        title: 'Drawer',
+        title: '',
         headerVisible: false,
     };
     render() {
@@ -12,11 +12,16 @@ class WalletCreationScreen extends Component {
             <Button
             title="Groups"
             backgroundColor="#2E4053"
-            onPress={() => this.props.navigation.navigate('Group')}
-          />
+            onPress={() => this.props.navigation.push('Group')}
+            />
+            <Button
+            title="Logout"
+            backgroundColor="#2E4053"
+            onPress={() => this.props.navigation.popToTop()}
+            />
         </View>
         );
-  }
+    }
 }
 
 export default WalletCreationScreen;

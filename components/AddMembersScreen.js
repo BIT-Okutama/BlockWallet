@@ -2,58 +2,45 @@ import React, { Component } from 'react';
 import { Button, View, TextInput, StyleSheet, Text, Alert } from 'react-native';
 import * as firebase from 'firebase';
 
-class CreateGroupScreen extends Component {
+class AddMembersScreen extends Component {
 
     static navigationOptions = ({ navigate, navigation }) => ({
-        title: 'Create Group',
+        title: 'Add Member',
     });
 
     constructor(props){
         super(props);
-        this.state ={ isLoading: true, groupName: '', groupDescription: '' }
+        this.state = { isLoading: true, memberMobile: '' }
     }
 
     create() {
       console.log("date today: " + new Date());
-      firebase.database().ref('groups/').push().set({
-          group_name: this.state.groupName,
-          group_desc: this.state.groupDescription,
-      }, function(error) {
-        if (error) {
-          alert("Creation failed");
-        } else {
-          alert("Successfully Created");
-        }
-      });
+    //   firebase.database().ref('groups/').push().set({
+    //       group_name: this.state.groupName,
+    //       group_desc: this.state.groupDescription,
+    //   }, function(error) {
+    //     if (error) {
+    //       alert("Creation failed");
+    //     } else {
+    //       alert("Successfully Created");
+    //     }
+    //   });
     }
   
     render() {
     return (
       <View style = {{ flex: 1 }}>
-        <View style = {{ paddingLeft: 20, paddingRight: 20 , marginTop: 20}}>
-          <Text style = { styles.titleSmallThinText }>Create a group now to be able to give your thank you to your friends.</Text>
-        </View>
-        <View style = {{ alignItems: "center" }} >
+        <View style = {{ alignItems: "center" }} marginTop={30} >
           <TextInput
-            placeholder = "Enter Group Name"
+            placeholder = "Enter Mobile Number"
             placeholderTextColor = "#666666"
             autoCapitalize = "none"
             clearButtonMode = "always" 
             maxLength = {80}
             marginTop = {50}
-            onChangeText = {(groupName) => this.setState({groupName})}
+            onChangeText = {(memberMobile) => this.setState({memberMobile})}
             style = {{width:300, fontSize:20, borderBottomColor: '#CFCFCF', borderBottomWidth: 1}}    
           /> 
-          <TextInput
-            placeholder = "Enter Description"
-            placeholderTextColor = "#666666"
-            autoCapitalize = "none"
-            clearButtonMode = "always" 
-            maxLength = {100}
-            marginTop = {30}
-            onChangeText={(groupDescription) => this.setState({groupDescription})}
-            style = {{width:300, fontSize:20, borderBottomColor: '#CFCFCF', borderBottomWidth: 1}}    
-          />
           <View style = { styles.button }>
             <Button
               title = "Create"
@@ -102,4 +89,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CreateGroupScreen;
+export default AddMembersScreen;

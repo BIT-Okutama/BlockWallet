@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-import { Button, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { 
+    TouchableHighlight, 
+    View, 
+    Text, 
+    StyleSheet, 
+    TouchableOpacity, 
+    Image, 
+    ListView } from 'react-native';
 import * as firebase from 'firebase';
 
 class GroupScreen extends Component {
+
     static navigationOptions = ({ navigate, navigation }) => ({
-        title: '',
+        title: 'Groups',
         headerRight: (
             <TouchableOpacity 
               style={{marginRight: 10}} 
@@ -15,13 +23,112 @@ class GroupScreen extends Component {
         ),
     });
 
+    constructor(props) {
+        super(props);
+        let ds = new ListView.DataSource({rowHasChanged:(r1, r2) => r1 !== r2});
+        this.state ={ 
+          itemDataSource: ds
+        }
+        this.renderRow = this.renderRow.bind(this);
+        this.pressRow = this.pressRow.bind(this);
+    }
+
+    componentWillMount() {
+        this.getItems();
+    }
+
+    componentDidMount() {
+        this.getItems();
+    }
+
+    getItems() {
+        firebase.database().ref('groups/').on('value', snapshot => {
+            let items = [];
+            snapshot.forEach((child) => {
+                console.log("fetching data: " + child.key);
+                console.log("fetching data: " + child.val().group_name);
+                items.push({
+                    title: child.val().group_name,
+                    description: child.val().group_desc,
+                    _key: child.key
+                })
+            });
+            this.setState({ itemDataSource: this.state.itemDataSource.cloneWithRows(items) });
+        });
+    }
+
+    pressRow(item) {
+        console.log(item);
+    }
+
+    renderRow(item) {
+        return (
+            <TouchableHighlight underlayColor="#2E4053" style = {styles.table} onPress={() => this.props.navigation.push("GroupDashboard", {itemDetails: item})}>
+                <View style = {{ marginLeft: 30 }}>
+                    <Text style = {styles.titleBoldText}>{item.title}</Text>
+                </View>
+            </TouchableHighlight>
+        )
+    }
+
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                
-            </View>
+            <ListView 
+                dataSource = {this.state.itemDataSource}
+                renderRow = {this.renderRow}
+            />
         );
     }
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+     flex: 1,
+     paddingTop: 22
+    },
+    sectionHeader: {
+      paddingTop: 2,
+      paddingLeft: 10,
+      paddingRight: 10,
+      paddingBottom: 2,
+      fontSize: 14,
+      fontWeight: 'bold',
+      backgroundColor: 'rgba(247,247,247,1.0)',
+    },
+    item: {
+      padding: 10,
+      fontSize: 18,
+      height: 44,
+    },
+    titleText: {
+        fontSize: 25,
+    },
+    titleBoldText: {
+      fontSize: 25,
+      fontWeight: 'bold',
+    },
+    titleLargeBoldText: {
+      fontSize: 40,
+      fontWeight: 'bold',
+    },
+    titleThinText: {
+        fontSize: 25,
+        fontWeight: '100',
+    },
+    titleSmallThinText: {
+      fontSize: 14,
+      fontWeight: '100',
+    },
+    greyColor: {
+        color: "#5F6A6A",
+    },
+    table: {
+        padding: 20, 
+        borderBottomWidth: 1, 
+        borderColor:"#CFCFCF", 
+        backgroundColor: "#fff"
+    },
+})
 
 export default GroupScreen;

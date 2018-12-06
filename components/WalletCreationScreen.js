@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, View, TextInput } from 'react-native';
+import { Button, View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Frisbee from 'frisbee';
 import * as firebase from 'firebase';
 
@@ -47,17 +47,23 @@ class WalletCreationScreen extends Component {
         throw new Error('Could not create wallet: ' + response.err + ' ' + response.body);
       }
       this.create(this.state.walletName, this.address, this.state.mobileNumber)
-      alert("Wallet successfully created");
+      this.props.navigation.goBack();
     } catch (err) {
       console.warn(err);
     }
   }
 
   create(walletName, address, mobileNumber) {
-    firebase.database().ref('wallet').push().set({
+    firebase.database().ref('wallet/' + mobileNumber).set({
         wallet_name: walletName,
         address: address,
         mobile_number: mobileNumber
+    }, function(error) {
+      if (error) {
+        alert("Creation failed");
+      } else {
+        alert("Successfully Created");
+      }
     });
   } 
 
@@ -67,49 +73,93 @@ class WalletCreationScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <TextInput
-          placeholder = "Enter Full Name"
-          placeholderTextColor = "#666666"
-          autoCapitalize = "none"
-          clearButtonMode = "always" 
-          maxLength = {80}
-          onChangeText={(fullName) => this.setState({fullName})}
-          style = {{width:300, fontSize:20, borderBottomColor: '#CFCFCF', borderBottomWidth: 1}}    
-        />
-        <TextInput
-          placeholder = "Enter Mobile Number"
-          placeholderTextColor = "#666666"
-          autoCapitalize = "none"
-          clearButtonMode = "always" 
-          maxLength = {15}
-          marginTop = {30}
-          onChangeText={(mobileNumber) => this.setState({mobileNumber})}
-          style = {{width:300, fontSize:20, borderBottomColor: '#CFCFCF', borderBottomWidth: 1}}    
-        />
-        <TextInput
-          placeholder = "Enter Wallet Name"
-          placeholderTextColor = "#666666"
-          autoCapitalize = "none"
-          clearButtonMode = "always" 
-          maxLength = {80}
-          marginTop = {30}
-          onChangeText={(walletName) => this.setState({walletName})}
-          style = {{width:300, fontSize:20, borderBottomColor: '#CFCFCF', borderBottomWidth: 1}}    
-        />
-        <Button
-          title="Create"
-          marginTop={20}
-          backgroundColor="#2E4053"
-          onPress={() => this.createWallet()}
-        />
-        <Button
-          title="Import Wallet"
-          onPress={() => this.props.navigation.navigate('Import')}
-        />
-      </View>
+        <View style={{ flex: 1, alignItems: 'center'}}>
+          <TextInput
+            placeholder = "Enter Full Name"
+            placeholderTextColor = "#666666"
+            autoCapitalize = "none"
+            clearButtonMode = "always" 
+            maxLength = {80}
+            marginTop = {20}
+            onChangeText={(fullName) => this.setState({fullName})}
+            style = {{width:300, fontSize:20, borderBottomColor: '#CFCFCF', borderBottomWidth: 1}}    
+          />
+          <TextInput
+            keyboardType='numeric'
+            placeholder = "Enter Mobile Number"
+            placeholderTextColor = "#666666"
+            autoCapitalize = "none"
+            clearButtonMode = "always" 
+            maxLength = {15}
+            marginTop = {30}
+            onChangeText={(mobileNumber) => this.setState({mobileNumber})}
+            style = {{width:300, fontSize:20, borderBottomColor: '#CFCFCF', borderBottomWidth: 1}}    
+          />
+          <TextInput
+            placeholder = "Enter Wallet Name"
+            placeholderTextColor = "#666666"
+            autoCapitalize = "none"
+            clearButtonMode = "always" 
+            maxLength = {80}
+            marginTop = {30}
+            onChangeText={(walletName) => this.setState({walletName})}
+            style = {{width:300, fontSize:20, borderBottomColor: '#CFCFCF', borderBottomWidth: 1}}    
+          />
+          <TouchableOpacity onPress={() => this.createWallet()} style={styles.button}>
+            <Text style={{color:"#fff", justifyContent: "center", fontSize:18}}>Create</Text>
+          </TouchableOpacity>
+          <Text style = {[ styles.titleSmallThinText, { marginTop:20 } ]}>or</Text>
+          <Button
+            title="Import Wallet"
+            style = {{ fontSize:20 }}
+            onPress={() => this.props.navigation.navigate('Import')}
+          />
+        </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  titleText: {
+      fontSize: 25,
+  },
+  titleBoldText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  titleLargeBoldText: {
+    fontSize: 40,
+    fontWeight: 'bold',
+  },
+  titleMediumBoldText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  titleThinText: {
+      fontSize: 25,
+      fontWeight: '100',
+  },
+  titleSmallThinText: {
+    fontSize: 14,
+    fontWeight: '100',
+  },
+  greyColor: {
+      color: "#5F6A6A",
+  },
+  button: {
+    marginTop:10,
+    marginLeft:30,
+    marginRight:30,
+    marginTop:30,
+    width: 120,
+    height:60,
+    backgroundColor:'#2E4053',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#2E4053',
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});
 
 export default WalletCreationScreen;
