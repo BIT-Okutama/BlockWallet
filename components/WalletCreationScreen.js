@@ -46,18 +46,19 @@ class WalletCreationScreen extends Component {
         alert("Creation of wallet failed");
         throw new Error('Could not create wallet: ' + response.err + ' ' + response.body);
       }
-      this.create(this.state.walletName, this.address, this.state.mobileNumber)
+      this.create(this.state.walletName, this.address, this.state.mobileNumber, this.state.fullName)
       this.props.navigation.goBack();
     } catch (err) {
       console.warn(err);
     }
   }
 
-  create(walletName, address, mobileNumber) {
+  create(walletName, address, mobileNumber, fullName) {
     firebase.database().ref('wallet/' + mobileNumber).set({
         wallet_name: walletName,
         address: address,
-        mobile_number: mobileNumber
+        mobile_number: mobileNumber,
+        full_name: fullName
     }, function(error) {
       if (error) {
         alert("Creation failed");

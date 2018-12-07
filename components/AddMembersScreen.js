@@ -10,21 +10,37 @@ class AddMembersScreen extends Component {
 
     constructor(props){
         super(props);
-        this.state = { isLoading: true, memberMobile: '' }
+        console.log("fetched ID: " + this.props.navigation.getParam('id', ''))
+        this.state = { 
+            isLoading: true, 
+            memberMobile: '', 
+            id: this.props.navigation.getParam('id', '')
+        }
     }
 
-    create() {
+    checkWallet() {
+        firebase.database().ref('wallet/' + this.state.memberMobile).on('value', snapshot => {
+            console.log("it exists: " + snapshot.exists());
+            if(snapshot.exists()) {
+                this.addMembers(this.state.memberMobile, snapshot.val().wallet_name);
+            } else {
+                alert("Number does not exists");
+            }
+        })
+    }
+
+    addMembers(mobileNumber, name) {
       console.log("date today: " + new Date());
-    //   firebase.database().ref('groups/').push().set({
-    //       group_name: this.state.groupName,
-    //       group_desc: this.state.groupDescription,
-    //   }, function(error) {
-    //     if (error) {
-    //       alert("Creation failed");
-    //     } else {
-    //       alert("Successfully Created");
-    //     }
-    //   });
+      firebase.database().ref('groups/' + this.state.id + '/members/').push().set({
+          name: name,
+          mobile_number: mobileNumber,
+      }, function(error) {
+        if (error) {
+          alert("Creation failed");
+        } else {
+          alert("Successfully Added");
+        }
+      });
     }
   
     render() {
@@ -32,6 +48,7 @@ class AddMembersScreen extends Component {
       <View style = {{ flex: 1 }}>
         <View style = {{ alignItems: "center" }} marginTop={30} >
           <TextInput
+            keyboardType='numeric'
             placeholder = "Enter Mobile Number"
             placeholderTextColor = "#666666"
             autoCapitalize = "none"
@@ -45,7 +62,7 @@ class AddMembersScreen extends Component {
             <Button
               title = "Create"
               color = "#fff"
-              onPress = {() => this.create()}
+              onPress = {() => this.checkWallet()}
             />
           </View>
         </View>

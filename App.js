@@ -42,7 +42,7 @@ const RootStack = createStackNavigator(
     Group: GroupScreen,
     CreateGroup: CreateGroupScreen,
     GroupDashboard: GroupDashboardScreen,
-    AddMember: AddMembersScreen,
+    AddMember: AddMembersScreen
   },
   {
     initialRouteName: 'Login',

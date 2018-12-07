@@ -50,7 +50,7 @@ class GroupScreen extends Component {
                 items.push({
                     title: child.val().group_name,
                     description: child.val().group_desc,
-                    _key: child.key
+                    id: child.key
                 })
             });
             this.setState({ itemDataSource: this.state.itemDataSource.cloneWithRows(items) });
@@ -63,9 +63,9 @@ class GroupScreen extends Component {
 
     renderRow(item) {
         return (
-            <TouchableHighlight underlayColor="#2E4053" style = {styles.table} onPress={() => this.props.navigation.push("GroupDashboard", {itemDetails: item})}>
+            <TouchableHighlight underlayColor="#f1f1f1" activeOpacity={70} style = {styles.table} onPress={() => this.props.navigation.push("GroupDashboard", {itemDetails: item})}>
                 <View style = {{ marginLeft: 30 }}>
-                    <Text style = {styles.titleBoldText}>{item.title}</Text>
+                    <Text style = {styles.titleMediumThinText}>{item.title}</Text>
                 </View>
             </TouchableHighlight>
         )
@@ -119,6 +119,10 @@ const styles = StyleSheet.create({
     titleSmallThinText: {
       fontSize: 14,
       fontWeight: '100',
+    },
+    titleMediumThinText: {
+        fontSize: 18,
+        fontWeight: '100',
     },
     greyColor: {
         color: "#5F6A6A",
